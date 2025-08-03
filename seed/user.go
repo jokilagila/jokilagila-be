@@ -2,7 +2,6 @@ package seed
 
 import (
 	"errors"
-	"log"
 
 	"github.com/google/uuid"
 	"github.com/jokilagila/jokilagila-be/config"
@@ -19,10 +18,11 @@ func UserSeed() error {
 
 	var existingAdmin model.User
 	err = postgresDB.Where("role = ?", "admin").First(&existingAdmin).Error
+    
 	if err == nil {
-		log.Println("User dengan role admin sudah ada.")
 		return nil
 	}
+
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return err
 	}
@@ -46,6 +46,5 @@ func UserSeed() error {
 		return err
 	}
 
-	log.Println("User admin berhasil dibuat dengan email:", adminData.Email)
 	return nil
 }

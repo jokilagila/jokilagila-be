@@ -1,29 +1,28 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
+	"log"
 
 	"github.com/jokilagila/jokilagila-be/config"
+	"github.com/jokilagila/jokilagila-be/internal/router"
 	"github.com/jokilagila/jokilagila-be/seed"
 )
 
 func main() {
-	database, err := config.PostgresConfig()
+	db, err := config.PostgresConfig()
 	if err != nil {
-		fmt.Println("Gagal untuk terhubung ke database:", err)
-		return
+		log.Fatalf("Gagal terhubung ke database: %v", err)
 	}
 
 	if err := seed.UserSeed(); err != nil {
-		fmt.Println("Gagal melakukan seeding user:", err)
-		return
+		log.Fatalf("Gagal melakukan seeding user: %v", err)
 	}
 
-	database.Logger.LogMode(1)
+	db.Logger.LogMode(1)
 
-	fmt.Println("Server berjalan di :8080")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		fmt.Println("Gagal menjalankan server:", err)
+	r := router.SetupRoutes()
+	log.Println("Server berjalan di http://localhost:8080")
+	if err := r.Run(":8080"); err != nil {
+		log.Fatalf("Gagal menjalankan server: %v", err)
 	}
 }
