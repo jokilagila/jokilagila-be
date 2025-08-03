@@ -15,5 +15,5 @@ func SetupSigninRouter(router *gin.RouterGroup) {
 	signinService := signin_service.NewSignInService(signinRepo)
 	signinController := signin_controller.NewSignInController(signinService)
 
-	router.POST("/signin", signinController.SigninUser, middleware.RateLimiterMiddleware())
+	router.POST("/signin", middleware.RateLimiterMiddleware(), signinController.SigninUser)
 }
