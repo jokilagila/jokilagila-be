@@ -6,6 +6,7 @@ import (
 	"github.com/jokilagila/jokilagila-be/internal/controller/signin_controller"
 	"github.com/jokilagila/jokilagila-be/internal/repository/signin_repo"
 	"github.com/jokilagila/jokilagila-be/internal/service/signin_service"
+	"github.com/jokilagila/jokilagila-be/middleware"
 )
 
 func SetupSigninRouter(router *gin.RouterGroup) {
@@ -14,5 +15,5 @@ func SetupSigninRouter(router *gin.RouterGroup) {
 	signinService := signin_service.NewSignInService(signinRepo)
 	signinController := signin_controller.NewSignInController(signinService)
 
-	router.POST("/signin", signinController.SigninUser)
+	router.POST("/signin", signinController.SigninUser, middleware.RateLimiterMiddleware())
 }
