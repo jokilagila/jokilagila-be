@@ -2,39 +2,57 @@ package config
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"sync"
+	"time"
+
 	"github.com/joho/godotenv"
 	"github.com/jokilagila/jokilagila-be/internal/model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
-	"os"
 )
 
-var Database *gorm.DB
+var (
+	Database *gorm.DB
+	Err      error
+	Once     sync.Once
+)
 
 func PostgresConfig() (*gorm.DB, error) {
-	if err := godotenv.Load(); err != nil {
-		log.Println("Gagal untuk memuat file environment variables:", err)
-		return nil, err
-	}
 
-	dataSource := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable TimeZone=Asia/Jakarta",
-		os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME"))
+	Once.Do(func() {
+		err := godotenv.Load()
+		if err != nil {
+			log.Fatal("Gagal memuat file .env:", err)
+		}
 
-	db, err := gorm.Open(postgres.Open(dataSource), &gorm.Config{})
-	if err != nil {
-		log.Println("Gagal untuk terhubung ke database:", err)
-		return nil, err
-	}
+		host := os.Getenv("DB_HOST")
+		port := os.Getenv("DB_PORT")
+		user := os.Getenv("DB_USER")
+		password := os.Getenv("DB_PASSWORD")
+		dbname := os.Getenv("DB_NAME")
 
-	Database = db
+		dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable TimeZone=Asia/Jakarta", host, port, user, password, dbname)
+		Database, Err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+		if Err != nil {
+			log.Fatal("Gagal terhubung ke database:", Err)
+		}
 
-	if err := db.AutoMigrate(&model.User{}); err != nil {
-		log.Println("Gagal untuk melakukan migrasi:", err)
-		return nil, err
-	}
+		sqlDB, err := Database.DB()
+		if err != nil {
+			log.Fatal("Gagal mendapatkan database instance:", err)
+		}
 
-	log.Println("Berhasil terhubung ke PostgreSQL")
+		sqlDB.SetMaxIdleConns(20)
+		sqlDB.SetMaxOpenConns(50)
+		sqlDB.SetConnMaxLifetime(60 * time.Minute)
 
-	return db, nil
+		if err := Database.AutoMigrate(&model.User{}); err != nil {
+			log.Fatal("Gagal melakukan migrasi database:", err)
+		}
+
+	})
+	return Database, Err
+
 }

@@ -12,7 +12,6 @@ func main() {
 		fmt.Println("Gagal untuk terhubung ke database:", err)
 		return
 	}
-
-	fmt.Println("Berhasil terhubung ke database:", database.Name())
+	database.Logger.LogMode(1)
 	http.ListenAndServe(":8080", nil)
 }
