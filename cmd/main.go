@@ -5,7 +5,7 @@ import (
 
 	"github.com/jokilagila/jokilagila-be/config"
 	"github.com/jokilagila/jokilagila-be/internal/router"
-	"github.com/jokilagila/jokilagila-be/seed"
+	"github.com/jokilagila/jokilagila-be/pkg/seed"
 )
 
 func main() {
