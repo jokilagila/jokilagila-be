@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/jokilagila/jokilagila-be/config"
 	"net/http"
+
+	"github.com/jokilagila/jokilagila-be/config"
+	"github.com/jokilagila/jokilagila-be/seed"
 )
 
 func main() {
@@ -12,6 +14,16 @@ func main() {
 		fmt.Println("Gagal untuk terhubung ke database:", err)
 		return
 	}
+
+	if err := seed.UserSeed(); err != nil {
+		fmt.Println("Gagal melakukan seeding user:", err)
+		return
+	}
+
 	database.Logger.LogMode(1)
-	http.ListenAndServe(":8080", nil)
+
+	fmt.Println("Server berjalan di :8080")
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		fmt.Println("Gagal menjalankan server:", err)
+	}
 }
