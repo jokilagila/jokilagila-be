@@ -14,15 +14,18 @@ type UserResponse struct {
 }
 
 type UserCreateRequest struct {
-	Name     string `json:"name" binding:"required"`
-	Email    string `json:"email" binding:"required" gorm:"unique;not null"`
-	Password string `json:"password" binding:"required"`
+	Name            string `json:"name" binding:"required"`
+	Email           string `json:"email" binding:"required" gorm:"unique;not null"`
+	Password        string `json:"password" binding:"required"`
+	ConfirmPassword string `json:"confirm_password" binding:"required"`
 }
 
 type UserCreateResponse struct {
 	ID        uuid.UUID `json:"id"`
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
+	Role      string    `json:"role"`
+	Phone     *string   `json:"phone,omitempty"`
 	CreatedAt string    `json:"created_at"`
 	UpdatedAt string    `json:"updated_at"`
 }

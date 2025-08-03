@@ -8,14 +8,14 @@ import (
 )
 
 func SetupRoutes() *gin.Engine {
-    route := gin.Default()
+	route := gin.Default()
 
-    if err := route.SetTrustedProxies(nil); err != nil {
-        log.Fatalf("Gagal mengatur trusted proxies: %v", err)
-    }
+	if err := route.SetTrustedProxies(nil); err != nil {
+		log.Fatalf("Gagal mengatur trusted proxies: %v", err)
+	}
 
-    api := route.Group("/api/v1")
-    auth_routes.SetupAuthRoutes(api)
+	api := route.Group("/api/v1")
+	auth_routes.SetupAuthRoutes(api)
 
-    return route
+	return route
 }
