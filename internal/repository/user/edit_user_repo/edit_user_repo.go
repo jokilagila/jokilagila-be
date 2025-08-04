@@ -1,31 +1,32 @@
 package edit_user_repo
 
 import (
+	"github.com/google/uuid"
 	"github.com/jokilagila/jokilagila-be/internal/model"
 	"gorm.io/gorm"
 )
 
-type EditUserRepository struct {
-	Database *gorm.DB
+type EditUserRepository interface {
+	UpdateUser(id uuid.UUID, userData map[string]interface{}) error
 }
 
-func NewEditUserRepository(db *gorm.DB) *EditUserRepository {
-	return &EditUserRepository{
-		Database: db,
-	}
+type EditUserRepositoryImpl struct {
+	db *gorm.DB
 }
 
-func (repo *EditUserRepository) UpdateUser(id uint, userData map[string]interface{}) error {
-	var user model.User
-	err := repo.Database.First(&user, id).Error
-	if err != nil {
-		return err
-	}
+var _ EditUserRepository = &EditUserRepositoryImpl{}
 
-	err = repo.Database.Model(&user).Updates(userData).Error
-	if err != nil {
-		return err
-	}
+func NewEditUserRepositoryImpl(db *gorm.DB) *EditUserRepositoryImpl {
+	return &EditUserRepositoryImpl{db: db}
+}
 
+func (repo *EditUserRepositoryImpl) UpdateUser(id uuid.UUID, userData map[string]interface{}) error {
+	result := repo.db.Model(&model.User{}).Where("id = ?", id).Updates(userData)
+	if result.Error != nil {
+		return result.Error
+	}
+	if result.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
 	return nil
 }

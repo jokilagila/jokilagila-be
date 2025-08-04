@@ -21,7 +21,6 @@ func NewSignInService(repo *signin_repo.SignInRepository) *SignInService {
 
 func (service *SignInService) Signin(request dto.UserLoginRequest) (*dto.UserResponse, error) {
 	user, err := service.SignInRepository.FindUserByEmail(request.Email)
-
 	if err != nil {
 		return nil, errors.New("user tidak ditemukan")
 	}
@@ -30,7 +29,10 @@ func (service *SignInService) Signin(request dto.UserLoginRequest) (*dto.UserRes
 		return nil, errors.New("password salah")
 	}
 
-	jsonWebToken := generatejwt.GenerateJWT(user.Email)
+	jsonWebToken, err := generatejwt.GenerateJWT(user.Email, user.Role)
+	if err != nil {
+		return nil, errors.New("gagal membuat token")
+	}
 
 	return &dto.UserResponse{
 		ID:        user.ID,

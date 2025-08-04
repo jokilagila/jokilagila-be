@@ -51,7 +51,7 @@ func (controller *SignUpController) SignupUser(context *gin.Context) {
 
 	context.JSON(http.StatusCreated, response.SuccessResponse{
 		Success: true,
-		Message: "User created successfully",
+		Message: "Signup successful",
 		Data:    signUpResponse,
 	})
 

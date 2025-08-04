@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	auth_routes "github.com/jokilagila/jokilagila-be/internal/router/auth"
+	user_routes "github.com/jokilagila/jokilagila-be/internal/router/user"
 )
 
 func SetupRoutes() *gin.Engine {
@@ -16,6 +17,7 @@ func SetupRoutes() *gin.Engine {
 
 	api := route.Group("/api/v1")
 	auth_routes.SetupAuthRoutes(api)
+    user_routes.SetupUserRoutes(api)
 
 	return route
 }
