@@ -3,9 +3,9 @@ package signin_router
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/jokilagila/jokilagila-be/config"
-	"github.com/jokilagila/jokilagila-be/internal/controller/signin_controller"
-	"github.com/jokilagila/jokilagila-be/internal/repository/signin_repo"
-	"github.com/jokilagila/jokilagila-be/internal/service/signin_service"
+	"github.com/jokilagila/jokilagila-be/internal/controller/auth/signin_controller"
+	"github.com/jokilagila/jokilagila-be/internal/repository/auth/signin_repo"
+	"github.com/jokilagila/jokilagila-be/internal/service/auth/signin_service"
 	"github.com/jokilagila/jokilagila-be/middleware"
 )
 

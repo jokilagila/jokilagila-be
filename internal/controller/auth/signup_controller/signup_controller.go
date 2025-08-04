@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jokilagila/jokilagila-be/internal/dto"
-	"github.com/jokilagila/jokilagila-be/internal/service/signup_service"
+	"github.com/jokilagila/jokilagila-be/internal/service/auth/signup_service"
 	"github.com/jokilagila/jokilagila-be/pkg/response"
 	"github.com/jokilagila/jokilagila-be/pkg/validator"
 )

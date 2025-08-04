@@ -5,7 +5,7 @@ import (
 
 	"github.com/jokilagila/jokilagila-be/internal/dto"
 	"github.com/jokilagila/jokilagila-be/internal/model"
-	"github.com/jokilagila/jokilagila-be/internal/repository/signup_repo"
+	"github.com/jokilagila/jokilagila-be/internal/repository/auth/signup_repo"
 	"github.com/jokilagila/jokilagila-be/pkg/hashpassword"
 )
 

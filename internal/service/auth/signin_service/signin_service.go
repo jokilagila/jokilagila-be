@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/jokilagila/jokilagila-be/internal/dto"
-	"github.com/jokilagila/jokilagila-be/internal/repository/signin_repo"
+	"github.com/jokilagila/jokilagila-be/internal/repository/auth/signin_repo"
 	"github.com/jokilagila/jokilagila-be/pkg/generatejwt"
 	"golang.org/x/crypto/bcrypt"
 )
