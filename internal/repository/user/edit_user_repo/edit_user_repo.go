@@ -7,26 +7,26 @@ import (
 )
 
 type EditUserRepository interface {
-	UpdateUser(id uuid.UUID, userData map[string]interface{}) error
+	UpdateUser(id uuid.UUID, userData map[string]interface{}) (*model.User, error)
 }
 
 type EditUserRepositoryImpl struct {
 	db *gorm.DB
 }
 
-var _ EditUserRepository = &EditUserRepositoryImpl{}
-
 func NewEditUserRepositoryImpl(db *gorm.DB) *EditUserRepositoryImpl {
 	return &EditUserRepositoryImpl{db: db}
 }
 
-func (repo *EditUserRepositoryImpl) UpdateUser(id uuid.UUID, userData map[string]interface{}) error {
-	result := repo.db.Model(&model.User{}).Where("id = ?", id).Updates(userData)
-	if result.Error != nil {
-		return result.Error
+func (repo *EditUserRepositoryImpl) UpdateUser(id uuid.UUID, userData map[string]interface{}) (*model.User, error) {
+	var user model.User
+	if err := repo.db.First(&user, "id = ?", id).Error; err != nil {
+		return nil, err
 	}
-	if result.RowsAffected == 0 {
-		return gorm.ErrRecordNotFound
+
+	if err := repo.db.Model(&user).Updates(userData).Error; err != nil {
+		return nil, err
 	}
-	return nil
+
+	return &user, nil
 }

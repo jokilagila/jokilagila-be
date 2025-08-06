@@ -30,7 +30,7 @@ func (repo *GetUserRepositoryImpl) GetAllUsers() ([]model.User, error) {
 	return users, nil
 }
 
-func (repo *GetUserRepositoryImpl) GetUserByID(id uint) (*model.User, error) {
+func (repo *GetUserRepositoryImpl) GetUserByID(id uuid.UUID) (*model.User, error) {
 	var user model.User
 
 	if err := repo.Database.Where("id = ?", id).First(&user).Error; err != nil {
